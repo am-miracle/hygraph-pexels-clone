@@ -1,0 +1,66 @@
+---
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro"
+import Card from "../../components/Card";
+import Pagination from "../../components/Pagination"
+
+const  { searchTerm }  = Astro.params;
+console.log(searchTerm)
+
+// export async function getStaticPaths() {
+  const data = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
+      method:'POST',
+      headers:{
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
+      },
+      body: JSON.stringify({
+        query: `
+          query pexels($searchTerm: String) {
+            searchPhotos {
+              search(searchTerm: $searchTerm) {
+                photos {
+                  photographer
+                  photographer_url
+                  id
+                  alt
+                  src {
+                    large2x
+                    original
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { searchTerm },
+      }),
+    }).then(response => response.json());
+    const results = data?.data?.searchPhotos;
+    // return [
+    //   { params: { searchTerm }, props: { results: result }  },
+    // ]
+// }
+// const { results } = Astro.props;
+---
+
+<Layout title=`Search Results for ${searchTerm}`>
+  This is a search page
+    <section class="gallery">
+			{results.map((result: any) => (
+				<ul class="images">
+					{result.search.photos.map((photo: any) => (
+						<Card
+							alt={photo.alt}
+							photographer={photo.photographer}
+							src={photo.src.large2x}
+              original={photo.src.original}
+							client:load
+						/>
+					))}
+				</ul>
+			))}
+      <!-- <Pagination /> -->
+    </section>
+</Layout>

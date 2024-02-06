@@ -1,0 +1,92 @@
+---
+import Searchbar from '../components/SearchBar';
+import Card from "../components/Card"
+import Layout from '../layouts/Layout.astro';
+import Pagination from "../components/Pagination"
+
+
+const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
+	method:'POST',
+    headers:{
+        "Content-Type": "application/json",
+      	Accept: "application/json",
+		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
+    },
+	body: JSON.stringify({
+		query: ` query Pexels($currentPage: Int, $perPage: Int) {
+			pexelsPhotos {
+				photos(currentPage: $currentPage, perPage: $perPage) {
+					photos {
+						photographer
+						photographer_url
+						id
+						alt
+						src {
+							large2x
+							original
+						}
+					}
+					page
+					next_page
+					per_page
+				}
+			}
+		}
+		`,
+		variables: {
+            currentPage: 1,
+            perPage: 15
+        }
+	})
+});
+
+
+const data = await response.json();
+const results = data?.data?.pexelsPhotos;
+
+const page = results[0].photos.page
+const perPage = results[0].photos.per_page
+// const nextPage = results[0].photos.next_page
+
+// const loadMore = () => {
+//     const nextPage = results[0].photos.next_page
+// 	console.log(nextPage)
+// 	return nextPage
+// };
+---
+
+<Layout title="Hygraph Pexels Clone">
+	<header class="search">
+		<img src="https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&w=600" alt="search-img">
+		<div class="content">
+			<h1>Image Gallery with Astro</h1>
+			<p>Search, preview and download any images within a second</p>
+			<div class="header-search">
+				<Searchbar client:load />
+			</div>
+		</div>
+	</header>
+	<main>
+        <section class="gallery">
+			{results.map((result: any) => (
+				<ul class="images">
+					{result.photos.photos.map((photo: any) => (
+						<Card
+							alt={photo.alt}
+							photographer={photo.photographer}
+							src={photo.src.large2x}
+							original={photo.src.original}
+							client:load
+						/>
+					))}
+				</ul>
+			))}
+            <Pagination
+				current_page={page}
+				next_page={results[0].photos.next_page}
+			 	client:load
+			 />
+        </section>
+    </main>
+</Layout>
+
