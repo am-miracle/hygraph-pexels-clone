@@ -12,20 +12,20 @@ function Navbar(){
                 />
                 <h2>Pexels-Clone</h2>
             </a>
-        <Searchbar/>
-        <div className="Right">
-        <div className="dropdown">
-        <button className="dropbtn">Explore</button>
-            <div className="dropdown-content">
-                <a href="#">Discover Photos</a>
-                <a href="#">Popular Searches</a>
-                <a href="#">Free Videos</a>
-                <a href="#">Free Videos</a>
+            <Searchbar />
+            <div className="Right">
+            <div className="dropdown">
+            <button className="dropbtn">Explore</button>
+                <div className="dropdown-content">
+                    <a href="#">Discover Photos</a>
+                    <a href="#">Popular Searches</a>
+                    <a href="#">Free Videos</a>
+                    <a href="#">Free Videos</a>
+                </div>
             </div>
-        </div>
-        <p>License</p>
-        <span className="material-symbols-outlined">notifications</span>
-        <img  className="upload" src={""} /></div>
+            <p>License</p>
+            <span className="material-symbols-outlined">notifications</span>
+            <img  className="upload" src={""} /></div>
         </div>
         </>
     );

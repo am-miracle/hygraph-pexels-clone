@@ -13,9 +13,9 @@ const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
 		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
     },
 	body: JSON.stringify({
-		query: ` query Pexels($currentPage: Int, $perPage: Int) {
+		query: ` query Pexels {
 			pexelsPhotos {
-				photos(currentPage: $currentPage, perPage: $perPage) {
+				photos {
 					photos {
 						photographer
 						photographer_url
@@ -32,11 +32,7 @@ const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
 				}
 			}
 		}
-		`,
-		variables: {
-            currentPage: 1,
-            perPage: 15
-        }
+		`
 	})
 });
 
@@ -46,7 +42,7 @@ const results = data?.data?.pexelsPhotos;
 
 const page = results[0].photos.page
 const perPage = results[0].photos.per_page
-// const nextPage = results[0].photos.next_page
+const nextPage = results[0].photos.next_page
 
 // const loadMore = () => {
 //     const nextPage = results[0].photos.next_page
@@ -81,11 +77,9 @@ const perPage = results[0].photos.per_page
 					))}
 				</ul>
 			))}
-            <Pagination
-				current_page={page}
-				next_page={results[0].photos.next_page}
+            <!-- <Pagination
 			 	client:load
-			 />
+			 /> -->
         </section>
     </main>
 </Layout>
