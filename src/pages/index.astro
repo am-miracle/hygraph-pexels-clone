@@ -43,12 +43,6 @@ const results = data?.data?.pexelsPhotos;
 const page = results[0].photos.page
 const perPage = results[0].photos.per_page
 const nextPage = results[0].photos.next_page
-
-// const loadMore = () => {
-//     const nextPage = results[0].photos.next_page
-// 	console.log(nextPage)
-// 	return nextPage
-// };
 ---
 
 <Layout title="Hygraph Pexels Clone">
@@ -77,9 +71,6 @@ const nextPage = results[0].photos.next_page
 					))}
 				</ul>
 			))}
-            <!-- <Pagination
-			 	client:load
-			 /> -->
         </section>
     </main>
 </Layout>

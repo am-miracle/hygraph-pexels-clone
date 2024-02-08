@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card"
+import Pagination from "../components/Pagination"
+
+
+// const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
+// 	method:'POST',
+//     headers:{
+//         "Content-Type": "application/json",
+//       	Accept: "application/json",
+// 		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
+//     },
+// 	body: JSON.stringify({
+// 		query: `query Pexels($currentPage: Int, $perPage: Int) {
+// 			pexelsPhotos {
+// 				photos(currentPage: $currentPage, perPage: $perPage) {
+// 					photos {
+// 						photographer
+// 						photographer_url
+// 						id
+// 						alt
+// 						src {
+// 							large2x
+// 							original
+// 						}
+// 					}
+// 					page
+// 					next_page
+// 					per_page
+// 				}
+// 			}
+// 		}
+// 		`,
+// 		variables: {
+//             currentPage,
+//             perPage
+//         }
+// 	})
+// });
+// const data = await response.json();
+// const results = data?.data?.pexelsPhotos;
+
+---
+
+<Layout title="Photo Page">
+    <Pagination client:load />
+</Layout>

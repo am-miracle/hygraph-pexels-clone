@@ -1,29 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Card from './Card';
 
-interface PaginationProps {
-  current_page: number;
-  next_page: string;
-}
+const Pagination: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const perPage = 15;
+  const [photos, setPhotos] = useState<any[]>([]);
 
-const Pagination: React.FC<PaginationProps> = ({ current_page, next_page }) => {
-  const [currentPage, setCurrentPage] = useState(current_page);
-  const [nextPage, setNextPage] = useState(next_page);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`,
+        },
+        body: JSON.stringify({
+          query: `query Pexels($currentPage: Int, $perPage: Int) {
+            pexelsPhotos {
+              photos(currentPage: $currentPage, perPage: $perPage) {
+                photos {
+                  photographer
+                  photographer_url
+                  id
+                  alt
+                  src {
+                    large2x
+                    original
+                  }
+                }
+              }
+            }
+          }`,
+          variables: {
+            currentPage,
+            perPage,
+          },
+        }),
+      });
 
-  const handleLoadMore = () => {
-    setCurrentPage(currentPage + 1);
-    setNextPage(next_page);
-    // Trigger a refetch with the new page number
-    console.log(next_page)
+      const data = await response.json();
+      const newPhotos = data?.data?.pexelsPhotos || [];
+
+      setPhotos((prevPhotos) => [...prevPhotos, ...newPhotos]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
+  const handleLoadMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
   return (
-    <div>
-      {/* {currentPage < next_page && ( */}
-        <button className="load-more" onClick={handleLoadMore}>
-          Load More
-        </button>
-      {/* )} */}
-    </div>
+    <section className="gallery">
+      <div style={{marginBottom: "50px"}}>
+      {photos.map((result: any, index: any) => (
+        <ul className="images" key={index}>
+            {result.photos.photos.map((photo: any) => (
+                <Card
+                  key={photo.alt}
+                  alt={photo.alt}
+                  photographer={photo.photographer}
+                  src={photo.src.large2x}
+                  original={photo.src.original}
+                />
+            ))}
+        </ul>
+      ))}
+      </div>
+      <div style={{marginBottom: "50px"}}>
+        <button onClick={handleLoadMore} className='load-more'>Load More</button>
+      </div>
+  </section>
   );
 };
 
