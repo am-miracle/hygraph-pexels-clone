@@ -2,27 +2,33 @@
 import Searchbar from "./SearchBar"
 import "./Navbar.css"
 ---
-<div class="container">
-    <a href="/" class="left">
-        <img
-            class="Logo"
-            src={"/assets/logo.svg"}
-            alt="logo"
-        />
-        <h2>Pexels-Clone</h2>
-    </a>
-    <Searchbar client:load />
-    <div class="Right">
-    <div class="dropdown">
-    <button class="dropbtn">Explore</button>
-        <div class="dropdown-content">
-            <a href="#">Discover Photos</a>
-            <a href="#">Popular Searches</a>
-            <a href="#">Free Videos</a>
-            <a href="#">Free Videos</a>
+<nav class="navbar">
+    <div class="container">
+        <div class="left">
+            <a href="/" class="logo-wrapper">
+                <img
+                    class="Logo"
+                    src={"/assets/logo.svg"}
+                    alt="logo"
+                />
+                <h2>Pexels-Clone</h2>
+            </a>
+            <Searchbar
+                client:load
+            />
+        </div>
+        <div class="right">
+            <div class="dropdown">
+                <p class="dropbtn">Explore</p>
+                <div class="dropdown-content">
+                    <a href="#">Discover Photos</a>
+                    <a href="#">Popular Searches</a>
+                    <a href="#">Free Videos</a>
+                    <a href="#">Free Videos</a>
+                </div>
+            </div>
+            <p>License</p>
+            <button class="join">Join</button>
         </div>
     </div>
-    <p>License</p>
-    <span class="material-symbols-outlined">notifications</span>
-    <img  class="upload" src={""} /></div>
-</div>
+</nav>
