@@ -3,46 +3,71 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card"
 import Pagination from "../components/Pagination"
 
+let currentPage = 1;
+let perPage = 15;
 
-// const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
-// 	method:'POST',
-//     headers:{
-//         "Content-Type": "application/json",
-//       	Accept: "application/json",
-// 		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
-//     },
-// 	body: JSON.stringify({
-// 		query: `query Pexels($currentPage: Int, $perPage: Int) {
-// 			pexelsPhotos {
-// 				photos(currentPage: $currentPage, perPage: $perPage) {
-// 					photos {
-// 						photographer
-// 						photographer_url
-// 						id
-// 						alt
-// 						src {
-// 							large2x
-// 							original
-// 						}
-// 					}
-// 					page
-// 					next_page
-// 					per_page
-// 				}
-// 			}
-// 		}
-// 		`,
-// 		variables: {
-//             currentPage,
-//             perPage
-//         }
-// 	})
-// });
-// const data = await response.json();
-// const results = data?.data?.pexelsPhotos;
+const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
+	method:'POST',
+    headers:{
+        "Content-Type": "application/json",
+      	Accept: "application/json",
+		    Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
+    },
+	body: JSON.stringify({
+		query: `query Pexels($currentPage: Int, $perPage: Int) {
+			pexelsPhotos {
+				photos(currentPage: $currentPage, perPage: $perPage) {
+					photos {
+						photographer
+						photographer_url
+						id
+						alt
+						src {
+							large2x
+							original
+						}
+					}
+					page
+					next_page
+					per_page
+				}
+			}
+		}
+		`,
+		variables: {
+            currentPage,
+            perPage
+        }
+	})
+});
+const data = await response.json();
+const results = data?.data?.pexelsPhotos;
 
 ---
 
 <Layout title="Photo Page">
-    <Pagination client:load />
+    <div class="container">
+        <section class="gallery">
+            <div style={{marginBottom: "50px"}}>
+            {results.map((result: any) => (
+              <ul class="images">
+                  {result.photos.photos.map((photo: any) => (
+                      <Card
+                        alt={photo.alt}
+                        photographer={photo.photographer}
+                        src={photo.src.large2x}
+                        original={photo.src.original}
+                      />
+                  ))}
+              </ul>
+            ))}
+            </div>
+            <Pagination
+                newPhotos={results}
+                currentPage={currentPage}
+                perPage={perPage}
+                client:load
+            />
+          </section>
+    </div>
 </Layout>

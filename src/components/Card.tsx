@@ -1,3 +1,6 @@
+import { useState } from "react";
+import PreviewImage from "./PreviewImage";
+
 type TProps = {
     src: string;
     alt: string;
@@ -11,6 +14,8 @@ const Card = ({
     alt,
     original,
 }: TProps) => {
+    const [showLightbox, setShowLightbox] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
 
     const handleDownload = async () => {
         if (!original) {
@@ -32,23 +37,39 @@ const Card = ({
         }
     };
 
+    const handleImageClick = () => {
+        setShowLightbox(true);
+        setPreviewImage(original || src);
+      };
+
     return (
-        <li className="card">
-            <img
-                src={src}
-                alt={alt}
-            />
-            <div className="details">
-                <div className="photographer">
-                    <i className="uis uis-camera"></i>
-                    <span>{photographer}</span>
+        <>
+            {showLightbox && (
+                <PreviewImage
+                    src={previewImage}
+                    closePreview={() => setShowLightbox(false)}
+                    photographer={photographer}
+                    alt={alt}
+                />
+            )}
+            <li className="card">
+                <img
+                    src={src}
+                    alt={alt}
+                    onClick={handleImageClick}
+                />
+                <div className="details">
+                    <div className="photographer">
+                        <i className="uis uis-camera"></i>
+                        <span>{photographer}</span>
+                    </div>
+                    <button onClick={handleDownload}>
+                        <span>Download</span>
+                        <i className="uis uis-import"></i>
+                    </button>
                 </div>
-                <button onClick={handleDownload}>
-                    <span>Download</span>
-                    <i className="uis uis-import"></i>
-                </button>
-            </div>
-        </li>
+            </li>
+        </>
     );
 };
 

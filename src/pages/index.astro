@@ -39,24 +39,20 @@ const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
 
 const data = await response.json();
 const results = data?.data?.pexelsPhotos;
-
-const page = results[0].photos.page
-const perPage = results[0].photos.per_page
-const nextPage = results[0].photos.next_page
 ---
 
 <Layout title="Hygraph Pexels Clone">
 	<header class="search">
 		<img src="https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&w=600" alt="search-img">
 		<div class="content">
-			<h1>Image Gallery with Astro</h1>
+			<h1>Pexel Clone Photos Gallery with Astro</h1>
 			<p>Search, preview and download any images within a second</p>
 			<div class="header-search">
 				<Searchbar client:load />
 			</div>
 		</div>
 	</header>
-	<main>
+	<main class="container">
         <section class="gallery">
 			{results.map((result: any) => (
 				<ul class="images">
@@ -71,6 +67,7 @@ const nextPage = results[0].photos.next_page
 					))}
 				</ul>
 			))}
+			<a href="/photos" class="load-more" style="text-decoration: none;">Load More</a>
         </section>
     </main>
 </Layout>
