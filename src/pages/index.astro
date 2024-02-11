@@ -1,8 +1,8 @@
 ---
-import Searchbar from '../components/SearchBar';
 import Card from "../components/Card"
 import Layout from '../layouts/Layout.astro';
-import Pagination from "../components/Pagination"
+import type { Photo } from "../types/index"
+import Hero from "../components/Hero.astro"
 
 
 const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
@@ -13,26 +13,24 @@ const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
 		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
     },
 	body: JSON.stringify({
-		query: ` query Pexels {
-			pexelsPhotos {
-				photos {
-					photos {
-						photographer
-						photographer_url
-						id
-						alt
-						src {
-							large2x
-							original
+		query: `
+			query Pexels($perPage: Int) {
+				pexelsPhotos {
+					photos (perPage: $perPage) {
+						photos {
+							id
+							alt
+							photographer
+							src {
+								large2x
+								original
+							}
 						}
 					}
-					page
-					next_page
-					per_page
 				}
-			}
 		}
-		`
+		`,
+		variables: { perPage: 9 }
 	})
 });
 
@@ -42,21 +40,12 @@ const results = data?.data?.pexelsPhotos;
 ---
 
 <Layout title="Hygraph Pexels Clone">
-	<header class="search">
-		<img src="https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&w=600" alt="search-img">
-		<div class="content">
-			<h1>Pexel Clone Photos Gallery with Astro</h1>
-			<p>Search, preview and download any images within a second</p>
-			<div class="header-search">
-				<Searchbar client:load />
-			</div>
-		</div>
-	</header>
+	<Hero />
 	<main class="container">
         <section class="gallery">
 			{results.map((result: any) => (
 				<ul class="images">
-					{result.photos.photos.map((photo: any) => (
+					{result.photos.photos.map((photo: Photo) => (
 						<Card
 							alt={photo.alt}
 							photographer={photo.photographer}
@@ -67,7 +56,7 @@ const results = data?.data?.pexelsPhotos;
 					))}
 				</ul>
 			))}
-			<a href="/photos" class="load-more" style="text-decoration: none;">Load More</a>
+			<a href="/photos" class="load-more" style="text-decoration: none;">Show More</a>
         </section>
     </main>
 </Layout>
