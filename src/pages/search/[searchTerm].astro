@@ -3,6 +3,7 @@ export const prerender = false;
 import Layout from "../../layouts/Layout.astro"
 import Card from "../../components/Card";
 import Pagination from "../../components/Pagination"
+import type { Photo } from "../../types";
 
 const  { searchTerm }  = Astro.params;
 
@@ -41,20 +42,21 @@ const  { searchTerm }  = Astro.params;
 <Layout title=`Search Results for ${searchTerm}`>
   <div style="margin: 2rem auto; max-width: 90%; width: 100%;">
     <h1>free {searchTerm}s photos</h1>
-      <section class="gallery">
-        {results.map((result: any) => (
-          <ul class="images">
-            {result.search.photos.map((photo: any) => (
-              <Card
-                alt={photo.alt}
-                photographer={photo.photographer}
-                src={photo.src.large2x}
-                original={photo.src.original}
-                client:load
-              />
-            ))}
-          </ul>
-        ))}
+    <section class="gallery">
+      {results.map((result: any) => (
+        <ul class="images">
+          {result.search.photos.map((photo: Photo) => (
+            <Card
+              alt={photo.alt}
+              photographer={photo.photographer}
+              src={photo.src.large2x}
+              original={photo.src.original}
+              client:load
+            />
+          ))}
+        </ul>
+      ))}
+    </section>
   </div>
       <!-- <Pagination /> -->
     </section>
