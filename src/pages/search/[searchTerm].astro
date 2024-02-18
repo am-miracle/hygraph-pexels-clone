@@ -2,10 +2,9 @@
 export const prerender = false;
 import Layout from "../../layouts/Layout.astro"
 import Card from "../../components/Card";
-import Pagination from "../../components/Pagination"
 import type { Photo } from "../../types";
 
-const  { searchTerm }  = Astro.params;
+  const  { searchTerm }  = Astro.params;
 
   const data = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
     method:'POST',
