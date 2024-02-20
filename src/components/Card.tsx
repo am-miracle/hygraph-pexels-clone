@@ -1,6 +1,3 @@
-import { useState } from "react";
-import PreviewImage from "./PreviewImage";
-
 type TProps = {
     src: string;
     alt: string;
@@ -14,9 +11,6 @@ const Card = ({
     alt,
     original,
 }: TProps) => {
-    const [showLightbox, setShowLightbox] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-
     const handleDownload = async () => {
         if (!original) {
             console.error("Image source (src) is undefined.");
@@ -37,26 +31,13 @@ const Card = ({
         }
     };
 
-    const handleImageClick = () => {
-        setShowLightbox(true);
-        setPreviewImage(original || src);
-      };
 
     return (
         <>
-            {showLightbox && (
-                <PreviewImage
-                    src={previewImage}
-                    closePreview={() => setShowLightbox(false)}
-                    photographer={photographer}
-                    alt={alt}
-                />
-            )}
             <li className="card">
                 <img
                     src={src}
                     alt={alt}
-                    onClick={handleImageClick}
                 />
                 <div className="details">
                     <div className="photographer">
