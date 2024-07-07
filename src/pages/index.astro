@@ -1,19 +1,18 @@
 ---
-import Card from "../components/Card"
-import Layout from '../layouts/Layout.astro';
-import type { Photo } from "../types/index"
-import Hero from "../components/Hero.astro"
-
+import Card from "../components/Card";
+import Layout from "../layouts/Layout.astro";
+import type { Photo } from "../types/index";
+import Hero from "../components/Hero.astro";
 
 const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
-	method:'POST',
-    headers:{
-        "Content-Type": "application/json",
-      	Accept: "application/json",
-		Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`
-    },
-	body: JSON.stringify({
-		query: `
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `Bearer ${import.meta.env.PUBLIC_HYGRAPH_PERMANENTAUTH_TOKEN}`,
+  },
+  body: JSON.stringify({
+    query: `
 			query Pexels($perPage: Int) {
 				pexelsPhotos {
 					photos (perPage: $perPage) {
@@ -30,34 +29,36 @@ const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
 				}
 		}
 		`,
-		variables: { perPage: 9 }
-	})
+    variables: { perPage: 9 },
+  }),
 });
-
 
 const data = await response.json();
 const results = data?.data?.pexelsPhotos;
 ---
 
 <Layout title="Hygraph Pexels Clone">
-	<Hero />
-	<main class="container">
-        <section class="gallery">
-			{results.map((result: any) => (
-				<ul class="images">
-					{result.photos.photos.map((photo: Photo) => (
-						<Card
-							alt={photo.alt}
-							photographer={photo.photographer}
-							src={photo.src.large2x}
-							original={photo.src.original}
-							client:load
-						/>
-					))}
-				</ul>
-			))}
-			<a href="/photos" class="load-more" style="text-decoration: none;">Show More</a>
-        </section>
-    </main>
+  <Hero />
+  <main class="container">
+    <section class="gallery">
+      {
+        results.map((result: any) => (
+          <ul class="images">
+            {result.photos.photos.map((photo: Photo) => (
+              <Card
+                alt={photo.alt}
+                photographer={photo.photographer}
+                src={photo.src.large2x}
+                original={photo.src.original}
+                client:load
+              />
+            ))}
+          </ul>
+        ))
+      }
+      <a href="/photos" class="load-more" style="text-decoration: none;"
+        >Show More</a
+      >
+    </section>
+  </main>
 </Layout>
-

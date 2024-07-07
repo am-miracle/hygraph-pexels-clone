@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card";
 import Pagination from "../components/Pagination";
 
-
 export async function fetchPhotos(currentPage: any) {
   const response = await fetch(import.meta.env.PUBLIC_HYGRAPH_ENDPOINT, {
     method: "POST",
@@ -52,20 +51,26 @@ const initialPhotos = await fetchPhotos(currentPage);
   <div class="container">
     <section class="gallery">
       <div>
-        {initialPhotos.map((result: any) => (
-          <ul class="images">
-            {result.photos.photos.map((photo: any) => (
-              <Card
-                alt={photo.alt}
-                photographer={photo.photographer}
-                src={photo.src.large2x}
-                original={photo.src.original}
-              />
-            ))}
-          </ul>
-        ))}
+        {
+          initialPhotos.map((result: any) => (
+            <ul class="images">
+              {result.photos.photos.map((photo: any) => (
+                <Card
+                  alt={photo.alt}
+                  photographer={photo.photographer}
+                  src={photo.src.large2x}
+                  original={photo.src.original}
+                />
+              ))}
+            </ul>
+          ))
+        }
       </div>
-      <Pagination newPhotos={initialPhotos} currentPage={currentPage} client:visible />
+      <Pagination
+        newPhotos={initialPhotos}
+        currentPage={currentPage}
+        client:visible
+      />
     </section>
   </div>
 </Layout>
